@@ -19,8 +19,11 @@ defmodule GrokStoreWeb.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", GrokStoreWeb do
-  #   pipe_through :api
-  # end
+  scope "/api" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: GrokStoreWeb.Schema
+
+    forward "/", Absinthe.Plug, schema: GrokStoreWeb.Schema
+  end
 end
