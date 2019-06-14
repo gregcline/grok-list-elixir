@@ -28,28 +28,29 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
   test "a list with items" do
     {:ok, list} = Groceries.create_list(%{title: "A title"})
 
-    {:ok, item_1} =
-      Groceries.add_item_to_list(list, %{
-        text: "spag sauce",
-        price: 2.99,
-        quantity: 2.0,
-        list_id: list.id
-      })
+    item_1 = %{
+      text: "spag sauce",
+      price: 2.99,
+      quantity: 2.0,
+      list_id: list.id
+    }
 
-    {:ok, item_2} =
-      Groceries.add_item_to_list(list, %{
-        text: "salmon",
-        price: 19.99,
-        quantity: 1.0,
-        list_id: list.id
-      })
+    {:ok, _repo_item_1} = Groceries.add_item_to_list(list, item_1)
+
+    item_2 = %{
+      text: "salmon",
+      price: 19.99,
+      quantity: 1.0,
+      list_id: list.id
+    }
+
+    {:ok, _repo_item_2} = Groceries.add_item_to_list(list, item_2)
 
     query = """
     {
       lists {
         title
         items {
-          id
           text
           price
           quantity
@@ -65,13 +66,17 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
     list_1 = hd(lists)
     assert list_1["title"] == list.title
 
-    [first_item, second_item | []] = Enum.sort_by(list_1["items"], & &1["id"])
-    assert first_item["text"] == item_1.text
-    assert first_item["price"] == item_1.price
-    assert first_item["quantity"] == item_1.quantity
+    map_with_string_keys = fn map ->
+      Enum.reduce(map, %{}, fn {k, v}, acc ->
+        Map.put(acc, Atom.to_string(k), v)
+      end)
+    end
 
-    assert second_item["text"] == item_2.text
-    assert second_item["price"] == item_2.price
-    assert second_item["quantity"] == item_2.quantity
+    list_items = list_1["items"]
+    {_val, item_1} = Map.pop(item_1, :list_id)
+    {_val, item_2} = Map.pop(item_2, :list_id)
+
+    assert map_with_string_keys.(item_1) in list_items
+    assert map_with_string_keys.(item_2) in list_items
   end
 end
