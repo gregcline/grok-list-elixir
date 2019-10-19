@@ -10,7 +10,8 @@ defmodule GrokStore.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [plt_add_deps: :transitive]
     ]
   end
 
@@ -44,7 +45,13 @@ defmodule GrokStore.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:absinthe_plug, "~> 1.4"},
-      {:absinthe, "~> 1.4"}
+      {:absinthe, "~> 1.4"},
+      {:argon2_elixir, "~> 2.0"},
+      {:comeonin, "~> 5.1"},
+      {:guardian, "~> 1.2"},
+      {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
+      {:ueberauth, "~> 0.6.1"},
+      {:ueberauth_identity, "~> 0.2.3"}
     ]
   end
 

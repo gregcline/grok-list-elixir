@@ -7,6 +7,9 @@ defmodule GrokStore.Groceries do
   alias GrokStore.Repo
 
   alias GrokStore.Groceries.List
+  alias GrokStore.Accounts.User
+
+  require Logger
 
   @doc """
   Returns the list of lists.
@@ -19,6 +22,19 @@ defmodule GrokStore.Groceries do
   """
   def list_lists do
     Repo.all(List)
+  end
+
+  @doc """
+  Returns a list of lists associated with a user.
+  """
+  @spec list_lists(%User{}) :: [%List{}]
+  def list_lists(%User{} = user) do
+    Repo.one(
+      from u in User,
+        join: lists in assoc(u, :lists),
+        preload: [lists: lists],
+        where: u.id == ^user.id
+    ).lists
   end
 
   @doc """
