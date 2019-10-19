@@ -10,9 +10,21 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 alias GrokStore.Groceries.{List, ListItem}
+alias GrokStore.Accounts
 alias GrokStore.Repo
 
+{:ok, user} =
+  %{"name" => "Scraps", "email" => "an_email@thing.com", "password" => "a password"}
+  |> Accounts.create_user()
+
 list = %List{title: "My grocery list"} |> Repo.insert!()
+list_2 = %List{title: "Other grok list"} |> Repo.insert!()
+
+user
+|> Repo.preload(:lists)
+|> Ecto.Changeset.change()
+|> Ecto.Changeset.put_assoc(:lists, [list])
+|> Repo.update!()
 
 %ListItem{
   text: "Spaghetti sauce",
