@@ -2,9 +2,25 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
   use GrokStoreWeb.ConnCase
   alias GrokStoreWeb.Schema
   alias GrokStore.Groceries
+  alias GrokStore.Accounts
+  alias GrokStore.Accounts.User
 
-  test "getting a list" do
+  setup do
+    {:ok, user} =
+      Accounts.create_user(%{
+        name: "Glorfindel",
+        email: "elf-lord@rivendell.io",
+        password: "mellon"
+      })
+
+    {:ok, user: %User{user | password: nil}}
+  end
+
+  test "getting a list", %{user: user} do
     {:ok, list} = Groceries.create_list(%{title: "A title"})
+    {:ok, list2} = Groceries.create_list(%{title: "Another title"})
+
+    {:ok, user} = Accounts.add_list(user, list)
 
     query = """
     {
@@ -16,13 +32,18 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
     """
 
     # will use the context once we have logged in users
-    context = %{}
+    context = %{user: user}
 
     {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema, context: context)
 
-    first_list = hd(lists)
-    assert first_list["title"] == list.title
-    assert Integer.parse(first_list["id"]) == {list.id, ""}
+    assert lists == [%{"title" => list.title, "id" => "#{list.id}"}]
+
+    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema)
+
+    assert lists == [
+             %{"title" => list.title, "id" => "#{list.id}"},
+             %{"title" => list2.title, "id" => "#{list2.id}"}
+           ]
   end
 
   test "a list with items" do

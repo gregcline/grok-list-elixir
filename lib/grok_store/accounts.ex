@@ -7,6 +7,7 @@ defmodule GrokStore.Accounts do
   alias GrokStore.Repo
 
   alias GrokStore.Accounts.User
+  alias GrokStore.Groceries.List, as: GList
 
   @doc """
   Returns the list of users.
@@ -38,6 +39,15 @@ defmodule GrokStore.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single user.
+
+  Returns `nil` if the User does not exist
+  """
+  def get_user(id) do
+    Repo.get(User, id)
+  end
+
+  @doc """
   Creates a user.
 
   ## Examples
@@ -51,7 +61,7 @@ defmodule GrokStore.Accounts do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.create_user_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -69,7 +79,7 @@ defmodule GrokStore.Accounts do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.create_user_changeset(attrs)
     |> Repo.update()
   end
 
@@ -100,5 +110,39 @@ defmodule GrokStore.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  @doc """
+  Associates a list with the user.
+  """
+  def add_list(%User{} = user, %GList{} = list) do
+    loaded_user =
+      user
+      |> Repo.preload(:lists)
+
+    loaded_user
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:lists, [list | loaded_user.lists])
+    |> Repo.update()
+  end
+
+  @doc """
+  Authenticates a user's credentials
+  """
+  def authenticate_user(username, password) do
+    query = from u in User, where: u.name == ^username
+
+    case Repo.one(query) do
+      nil ->
+        Argon2.no_user_verify()
+        {:error, :invalid_credentials}
+
+      user ->
+        if Argon2.verify_pass(password, user.passhash) do
+          {:ok, user}
+        else
+          {:error, :invalid_credentials}
+        end
+    end
   end
 end

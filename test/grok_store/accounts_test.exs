@@ -6,9 +6,19 @@ defmodule GrokStore.AccountsTest do
   describe "users" do
     alias GrokStore.Accounts.User
 
-    @valid_attrs %{email: "some email", name: "some name", passhash: "some passhash"}
-    @update_attrs %{email: "some updated email", name: "some updated name", passhash: "some updated passhash"}
-    @invalid_attrs %{email: nil, name: nil, passhash: nil}
+    @valid_attrs %{
+      email: "some email",
+      name: "some name",
+      passhash: "some passhash",
+      password: "some password"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      name: "some updated name",
+      passhash: "some updated passhash",
+      password: "some updated password"
+    }
+    @invalid_attrs %{email: nil, name: nil, passhash: nil, password: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -20,12 +30,18 @@ defmodule GrokStore.AccountsTest do
     end
 
     test "list_users/0 returns all users" do
-      user = user_fixture()
+      user =
+        user_fixture()
+        |> Map.put(:password, nil)
+
       assert Accounts.list_users() == [user]
     end
 
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture()
+      user =
+        user_fixture()
+        |> Map.put(:password, nil)
+
       assert Accounts.get_user!(user.id) == user
     end
 
@@ -33,7 +49,6 @@ defmodule GrokStore.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
       assert user.name == "some name"
-      assert user.passhash == "some passhash"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -45,11 +60,13 @@ defmodule GrokStore.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.email == "some updated email"
       assert user.name == "some updated name"
-      assert user.passhash == "some updated passhash"
     end
 
     test "update_user/2 with invalid data returns error changeset" do
-      user = user_fixture()
+      user =
+        user_fixture()
+        |> Map.put(:password, nil)
+
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
       assert user == Accounts.get_user!(user.id)
     end
@@ -63,6 +80,17 @@ defmodule GrokStore.AccountsTest do
     test "change_user/1 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user(user)
+    end
+
+    test "add_list/2 associates a list with a user" do
+      user = user_fixture()
+      list = GrokStore.GroceryHelper.list_fixture()
+      assert {:ok, %User{} = user} = Accounts.add_list(user, list)
+      assert list == hd(user.lists)
+
+      list2 = GrokStore.GroceryHelper.list_fixture()
+      assert {:ok, %User{} = user} = Accounts.add_list(user, list2)
+      assert [list2, list] == user.lists
     end
   end
 end

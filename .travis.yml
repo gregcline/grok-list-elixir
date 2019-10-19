@@ -1,3 +1,7 @@
 language: elixir
 elixir:
-  - '1.8.1'
+- 1.8.1
+deploy:
+  provider: heroku
+  api_key:
+    secure: GbD8u+2fi8TiMzFapVglQheXF/QEQoVe7cBr8LwxmO6Za7LCOFPuIyB+wVadTtvPVRQZcmFKZ+CWTXibB0Aog8wJICNmFGLEEgVm7K1CQ6Lf3nMHm/fzU11ZOVchqBFdw7/9YxERvcqPntcM6Kt6CC32tvzV/Tcd6QfchVUiR7DVMXQQkLy0sES4veeEhzXxZNrgmN2WwdyrUO3T1RWiL6XIlxVcGNVRSPIhwd0a0hrY3CePjm6LEYE23n7cwioPYuoVx7q+zWSKtp+zGYayjcPK7NjRoQlp6xvpImOt9L1yUpn9fjClWhWeARHilXqlb3UKSVOw2LoAioV5IlHCgDkTJceOHGqUysGW6Rzk+m8H0lcmppaHgbUKbffjHWHHVxuVmfuk+lVTcnDxq567F19waDXuO6pSbIUdsHhSZMKsuX/LpziU2cYtf0WWGt0tNtWGP7sKUeL59tn3+Qb/vhCo38awMzESzjcuVTbZuGP2bw4jFNmj1o1zffzwIYz/7tMD8TB3fpYcmdR2VlHu4U6iP/zShYNrnba//cRIUrNgRrX1ot28f5EUTgA9byq+AP4olXwrM1Bb+9R9+jTr7TLG4kKWyrl65aWUNI7ixu4hQc/zO88vMk94GS0VBRvTKhNag+o2hTAy4HxKAX8bssBqZkWDzdH0s80XDVGYy4A=

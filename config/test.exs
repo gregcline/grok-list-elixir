@@ -14,5 +14,10 @@ config :grok_store, GrokStoreWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+# Configuration for JWTs
+config :grok_store, GrokStoreWeb.Auth.Guardian,
+  issuer: "grok_store",
+  secret_key: "ztGCGCj7Gb2fVrHps6zAaPh/NHDvSlHEeyOuERwoX2/2N36+/F0rVKotac4tGIuz"
+
 # Print only warnings and errors during test
 config :logger, level: :warn

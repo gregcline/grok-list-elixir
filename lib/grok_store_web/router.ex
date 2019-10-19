@@ -13,6 +13,11 @@ defmodule GrokStoreWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug GrokStoreWeb.Auth.Pipeline
+    plug GrokStoreWeb.Auth.Context
+  end
+
   scope "/", GrokStoreWeb do
     pipe_through :browser
 
@@ -20,7 +25,7 @@ defmodule GrokStoreWeb.Router do
   end
 
   scope "/api" do
-    pipe_through :api
+    pipe_through [:api, :auth]
 
     forward "/graphiql", Absinthe.Plug.GraphiQL, schema: GrokStoreWeb.Schema
 

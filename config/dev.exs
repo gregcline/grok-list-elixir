@@ -65,6 +65,11 @@ config :grok_store, GrokStoreWeb.Endpoint,
     ]
   ]
 
+# Configuration for JWTs
+config :grok_store, GrokStoreWeb.Auth.Guardian,
+  issuer: "grok_store",
+  secret_key: "ztGCGCj7Gb2fVrHps6zAaPh/NHDvSlHEeyOuERwoX2/2N36+/F0rVKotac4tGIuz"
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
