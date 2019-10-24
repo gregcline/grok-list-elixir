@@ -1,4 +1,4 @@
-defmodule GrokStoreWeb.Absinthe.Queries.UserTest do
+defmodule GrokStoreWeb.Absinthe.Mutations.UserTest do
   use GrokStoreWeb.ConnCase
   alias GrokStoreWeb.Schema
   alias GrokStore.Accounts

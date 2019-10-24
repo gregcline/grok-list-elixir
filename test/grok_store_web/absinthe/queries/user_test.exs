@@ -2,7 +2,6 @@ defmodule GrokStoreWeb.Absinthe.Queries.UserTest do
   use GrokStoreWeb.ConnCase
   alias GrokStoreWeb.Schema
   alias GrokStore.Accounts
-  alias GrokStoreWeb.Auth.Guardian
 
   setup do
     {:ok, user} =
