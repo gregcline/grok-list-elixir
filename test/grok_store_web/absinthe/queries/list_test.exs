@@ -16,6 +16,23 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
     {:ok, user: %User{user | password: nil}}
   end
 
+  test "no lists", %{user: user} do
+    query = """
+    {
+      lists {
+        id
+        title
+      }
+    }
+    """
+
+    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema)
+    assert lists == []
+    context = %{user: user}
+    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema, context: context)
+    assert lists == []
+  end
+
   test "getting a list", %{user: user} do
     {:ok, list} = Groceries.create_list(%{title: "A title"})
     {:ok, list2} = Groceries.create_list(%{title: "Another title"})
@@ -31,7 +48,6 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
     }
     """
 
-    # will use the context once we have logged in users
     context = %{user: user}
 
     {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema, context: context)

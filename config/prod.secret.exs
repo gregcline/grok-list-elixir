@@ -12,6 +12,11 @@ database_url =
     For example: ecto://USER:PASS@HOST/DATABASE
     """
 
+# Configuration for JWTs
+config :grok_store, GrokStoreWeb.Auth.Guardian,
+  issuer: "grok_store",
+  secret_key: System.get_env("GUARDIAN_TOKEN")
+
 config :grok_store, GrokStore.Repo,
   # ssl: true,
   url: database_url,

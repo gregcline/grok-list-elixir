@@ -29,12 +29,16 @@ defmodule GrokStore.Groceries do
   """
   @spec list_lists(%User{}) :: [%List{}]
   def list_lists(%User{} = user) do
-    Repo.one(
+    query =
       from u in User,
         join: lists in assoc(u, :lists),
         preload: [lists: lists],
         where: u.id == ^user.id
-    ).lists
+
+    case Repo.one(query) do
+      nil -> []
+      user -> user.lists
+    end
   end
 
   @doc """

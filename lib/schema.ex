@@ -20,6 +20,14 @@ defmodule GrokStoreWeb.Schema do
   end
 
   mutation do
+    @desc "Register a user"
+    field :create_user, type: :user do
+      arg(:name, non_null(:string))
+      arg(:email, non_null(:string))
+      arg(:password, non_null(:string))
+      resolve(&Resolvers.Accounts.create_user/2)
+    end
+
     @desc "Sign in a user"
     field :login, type: :session do
       arg(:email, non_null(:string))

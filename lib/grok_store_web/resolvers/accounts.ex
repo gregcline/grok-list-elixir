@@ -1,6 +1,15 @@
 defmodule GrokStoreWeb.Resolvers.Accounts do
   alias GrokStoreWeb.Auth.Guardian
   alias GrokStoreWeb.Auth.Helper
+  alias GrokStore.Accounts
+
+  def create_user(%{name: name, email: email, password: password}, _info) do
+    Accounts.create_user(%{
+      name: name,
+      email: email,
+      password: password
+    })
+  end
 
   def login(%{email: email, password: password}, _info) do
     with {:ok, user} <- Helper.login_with_email_pass(email, password),
