@@ -2,6 +2,8 @@ defmodule GrokStoreWeb.Resolvers.Accounts do
   alias GrokStoreWeb.Auth.Guardian
   alias GrokStoreWeb.Auth.Helper
   alias GrokStore.Accounts
+  alias GrokStore.Repo
+  require Logger
 
   def create_user(%{name: name, email: email, password: password}, _info) do
     Accounts.create_user(%{
@@ -32,5 +34,12 @@ defmodule GrokStoreWeb.Resolvers.Accounts do
       user ->
         {:ok, user}
     end
+  end
+
+  def list_list_users(parent, _args, _info) do
+    Logger.info(inspect(parent))
+    loaded = Repo.preload(parent, :users)
+    Logger.info(inspect(loaded))
+    {:ok, loaded.users}
   end
 end

@@ -145,4 +145,22 @@ defmodule GrokStore.Accounts do
         end
     end
   end
+
+  @doc """
+  Gets a list by id if the user is a member of it. Returns nil otherwise.
+  """
+  def get_user_list(user, list_id) do
+    query =
+      from l in GList,
+        where: l.id == ^list_id,
+        preload: :users
+
+    list = Repo.one(query)
+
+    if list && Enum.any?(list.users, fn l_user -> l_user.id == user.id end) do
+      list
+    else
+      nil
+    end
+  end
 end

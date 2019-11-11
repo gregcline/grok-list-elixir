@@ -2,6 +2,7 @@ defmodule GrokStore.AccountsTest do
   use GrokStore.DataCase
 
   alias GrokStore.Accounts
+  alias GrokStore.Repo
 
   describe "users" do
     alias GrokStore.Accounts.User
@@ -91,6 +92,15 @@ defmodule GrokStore.AccountsTest do
       list2 = GrokStore.GroceryHelper.list_fixture()
       assert {:ok, %User{} = user} = Accounts.add_list(user, list2)
       assert [list2, list] == user.lists
+    end
+
+    test "get_user_list/2 fetches a list if the user is a member" do
+      user = user_fixture()
+      list = GrokStore.GroceryHelper.list_fixture()
+      assert nil == Accounts.get_user_list(user, list.id)
+      Accounts.add_list(user, list)
+      list = Repo.preload(list, [:users])
+      assert list == Accounts.get_user_list(user, list.id)
     end
   end
 end
