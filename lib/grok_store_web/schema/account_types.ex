@@ -1,6 +1,5 @@
-defmodule GrokStorWeb.Schema.AccountTypes do
+defmodule GrokStoreWeb.Schema.AccountTypes do
   use Absinthe.Schema.Notation
-  alias GrokStoreWeb.Resolvers
 
   @desc "A user"
   object :user do
