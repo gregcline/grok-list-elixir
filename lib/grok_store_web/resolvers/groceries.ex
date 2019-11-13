@@ -39,4 +39,22 @@ defmodule GrokStoreWeb.Resolvers.Groceries do
   def add_item(_parent, _args, _info) do
     {:error, "You must be signed in to add an item to a list"}
   end
+
+  def check_item(_parent, args, %{context: %{user: user}}) do
+    list_item =
+      GrokStore.Groceries.get_list_item!(args[:id])
+      |> GrokStore.Repo.preload([:list])
+
+    case Accounts.get_user_list(user, list_item.list.id) do
+      nil ->
+        {:error, "You must be a member of a list to check an item on it"}
+
+      _list ->
+        GrokStore.Groceries.check_item(list_item)
+    end
+  end
+
+  def check_item(_parent, _args, _context) do
+    {:error, "You must be signed in to check an item"}
+  end
 end
