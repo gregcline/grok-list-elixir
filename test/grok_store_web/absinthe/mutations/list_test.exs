@@ -91,40 +91,126 @@ defmodule GrokStoreWeb.Absinthe.Mutations.ListTest do
                "listId" => to_string(list.id)
              }
     end
+
+    test "only signed in users can add items to lists", %{list: list} do
+      query = """
+      mutation AddItem {
+        addItem(listId: #{list.id}, text: "Salmon") {
+          text
+        }
+      }
+      """
+
+      {:ok, %{errors: [error | []]}} = Absinthe.run(query, Schema)
+
+      assert error[:message] == "You must be signed in to add an item to a list"
+    end
+
+    test "signed in users can only add items to lists they are members of", %{list: list} do
+      query = """
+      mutation AddItem {
+        addItem(listId: #{list.id}, text: "Salmon") {
+          text
+        }
+      }
+      """
+
+      {:ok, user_2} =
+        Accounts.create_user(%{
+          name: "Gollum",
+          email: "smeagol@misty-mountains.net",
+          password: "the precious"
+        })
+
+      {:ok, %{errors: [error | []]}} = Absinthe.run(query, Schema, context: %{user: user_2})
+
+      assert error[:message] == "You must be a member of the list to add to it"
+    end
   end
 
-  test "only signed in users can add items to lists", %{list: list} do
-    query = """
-    mutation AddItem {
-      addItem(listId: #{list.id}, text: "Salmon") {
-        text
+  describe "checkItem" do
+    test "should toggle the checked state of an item", %{user: user, list: list} do
+      item_attrs = %{
+        text: "Draught",
+        price: 2.99,
+        quantity: 1.0
       }
-    }
-    """
 
-    {:ok, %{errors: [error | []]}} = Absinthe.run(query, Schema)
+      {:ok, item} = Groceries.add_item_to_list(list, item_attrs)
 
-    assert error[:message] == "You must be signed in to add an item to a list"
-  end
-
-  test "signed in users can only add items to lists they are members of", %{list: list} do
-    query = """
-    mutation AddItem {
-      addItem(listId: #{list.id}, text: "Salmon") {
-        text
+      query = """
+      mutation CheckItem {
+        checkItem(id: #{item.id}) {
+          text
+          checked
+        }
       }
-    }
-    """
+      """
 
-    {:ok, user_2} =
-      Accounts.create_user(%{
-        name: "Gollum",
-        email: "smeagol@misty-mountains.net",
-        password: "the precious"
-      })
+      {:ok, %{data: %{"checkItem" => checked_item}}} =
+        Absinthe.run(query, Schema, context: %{user: user})
 
-    {:ok, %{errors: [error | []]}} = Absinthe.run(query, Schema, context: %{user: user_2})
+      assert checked_item["text"] == item.text
+      assert checked_item["checked"] == !item.checked
 
-    assert error[:message] == "You must be a member of the list to add to it"
+      {:ok, %{data: %{"checkItem" => checked_item}}} =
+        Absinthe.run(query, Schema, context: %{user: user})
+
+      assert checked_item["text"] == item.text
+      assert checked_item["checked"] == item.checked
+    end
+
+    test "can only check items if signed in", %{list: list} do
+      item_attrs = %{
+        text: "Draught",
+        price: 2.99,
+        quantity: 1.0
+      }
+
+      {:ok, item} = Groceries.add_item_to_list(list, item_attrs)
+
+      query = """
+      mutation CheckItem {
+        checkItem(id: #{item.id}) {
+          text
+          checked
+        }
+      }
+      """
+
+      {:ok, %{errors: [error | []]}} = Absinthe.run(query, Schema)
+
+      assert error[:message] == "You must be signed in to check an item"
+    end
+
+    test "can only check items if a member of the list", %{list: list} do
+      item_attrs = %{
+        text: "Draught",
+        price: 2.99,
+        quantity: 1.0
+      }
+
+      {:ok, item} = Groceries.add_item_to_list(list, item_attrs)
+
+      query = """
+      mutation CheckItem {
+        checkItem(id: #{item.id}) {
+          text
+          checked
+        }
+      }
+      """
+
+      {:ok, user_2} =
+        Accounts.create_user(%{
+          name: "Gollum",
+          email: "smeagol@misty-mountains.net",
+          password: "the precious"
+        })
+
+      {:ok, %{errors: [error | []]}} = Absinthe.run(query, Schema, context: %{user: user_2})
+
+      assert error[:message] == "You must be a member of a list to check an item on it"
+    end
   end
 end

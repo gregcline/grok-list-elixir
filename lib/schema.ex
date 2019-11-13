@@ -49,5 +49,11 @@ defmodule GrokStoreWeb.Schema do
       arg(:list_id, :id)
       resolve(&Resolvers.Groceries.add_item/3)
     end
+
+    @desc "Toggles the checked status on an item"
+    field :check_item, type: :item do
+      arg(:id, non_null(:id))
+      resolve(&Resolvers.Groceries.check_item/3)
+    end
   end
 end

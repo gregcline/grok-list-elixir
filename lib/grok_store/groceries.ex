@@ -228,6 +228,14 @@ defmodule GrokStore.Groceries do
   end
 
   @doc """
+  Toggles an item's checked status
+  """
+  def check_item(item) do
+    ListItem.changeset(item, %{checked: !item.checked})
+    |> Repo.update()
+  end
+
+  @doc """
   Returns all the items in a list
   """
   def list_items_in_list(%List{} = list) do

@@ -158,5 +158,18 @@ defmodule GrokStore.GroceriesTest do
       assert list_item.quantity == item[:quantity]
       assert list_item.checked == false
     end
+
+    test "check_item/1 toggles an item's checked status" do
+      item = list_item_fixture()
+
+      {:ok, checked} = Groceries.check_item(item)
+      db_checked = Groceries.get_list_item!(item.id)
+      assert checked.checked == false
+      assert db_checked == checked
+      {:ok, unchecked} = Groceries.check_item(checked)
+      assert unchecked.checked == true
+      db_unchecked = Groceries.get_list_item!(item.id)
+      assert db_unchecked == unchecked
+    end
   end
 end
