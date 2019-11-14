@@ -15,7 +15,11 @@ database_url =
 # Configuration for JWTs
 config :grok_store, GrokStoreWeb.Auth.Guardian,
   issuer: "grok_store",
-  secret_key: System.get_env("GUARDIAN_TOKEN")
+  secret_key:
+    System.get_env("GUARDIAN_TOKEN") ||
+      raise("""
+      environment variable GUARDIAN_TOKEN is missing.
+      """)
 
 config :grok_store, GrokStore.Repo,
   # ssl: true,
