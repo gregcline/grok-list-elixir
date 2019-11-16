@@ -22,6 +22,16 @@ module.exports = (env, options) => ({
   module: {
     rules: [
       {
+        test: /\.elm$/,
+        exclude: [/elm-stuff/, /node_modules/],
+        use: {
+          loader: 'elm-webpack-loader',
+          options: {
+            debug: options.mode === 'development'
+          }
+        }
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
