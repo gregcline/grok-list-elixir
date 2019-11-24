@@ -2,8 +2,8 @@ module MainTests exposing (..)
 
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
-import Html.Attributes exposing (placeholder, type_, value)
 import Html
+import Html.Attributes exposing (placeholder, type_, value)
 import Json.Decode as Decode
 import Login
 import Main exposing (..)
@@ -70,15 +70,13 @@ decodeApiUrlTests =
         [ test "returns a URL if properly formatted" <|
             \_ ->
                 "{ \"api\": \"http://localhost:4000/api\"  }"
-                |> Decode.decodeString Decode.value
-                |> Result.andThen decodeApiUrl
-                |> Expect.equal (Ok (Url.fromString "http://localhost:4000/api"))
-
+                    |> Decode.decodeString Decode.value
+                    |> Result.andThen decodeApiUrl
+                    |> Expect.equal (Ok (Url.fromString "http://localhost:4000/api"))
         , fuzz string "returns an error otherwise" <|
             \jsonStr ->
                 jsonStr
-                |> Decode.decodeString Decode.value
-                |> Result.andThen decodeApiUrl
-                |> Expect.err
+                    |> Decode.decodeString Decode.value
+                    |> Result.andThen decodeApiUrl
+                    |> Expect.err
         ]
-
