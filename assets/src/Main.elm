@@ -8,6 +8,7 @@ import Json.Decode as Decode
 import Login
 import Url
 import Url.Parser exposing ((</>), Parser, map, oneOf, parse, s, string)
+import Session
 
 
 
@@ -34,19 +35,14 @@ type alias Model =
     { key : Nav.Key
     , url : Url.Url
     , pageModel : PageModel
-    , session : Session
+    , session : Session.Session
     }
 
 
 type PageModel
     = LoginPage Login.Model
+    | UserLists UserLists.Model
     | OtherPage
-
-
-type alias Session =
-    { api : Maybe Url.Url
-    , token : Maybe String
-    }
 
 
 init : Decode.Value -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -63,14 +59,15 @@ init flags url key =
                             Debug.log <| Decode.errorToString error
                     in
                     Nothing
-    in
-    ( { key = key
-      , url = url
-      , pageModel = url |> parseRoute |> setPage
-      , session =
+        session =
             { api = apiUrl
             , token = Nothing
             }
+    in
+    ( { key = key
+      , url = url
+      , pageModel = url |> parseRoute |> setPage session
+      , session = session
       }
     , Cmd.none
     )
@@ -114,8 +111,17 @@ update msg model =
             , Cmd.none
             )
 
+        ( LoginMsg (Login.CompletedLogin token), LoginPage loginModel ) ->
+            let sessionToken = Session.extractToken token
+                sessionModel = model.session
+                session = {sessionModel | token = sessionToken}
+            in
+                ( { model | session = session}, Cmd.none )
         ( LoginMsg loginMsg, LoginPage loginModel ) ->
-            ( { model | pageModel = Login.update loginMsg loginModel |> LoginPage }, Cmd.none )
+            let (newLoginModel, newLoginCmd) =
+                    Login.update loginMsg loginModel
+            in
+            ( { model | pageModel = LoginPage newLoginModel}, Cmd.map LoginMsg newLoginCmd )
 
         _ ->
             ( model, Cmd.none )
@@ -144,11 +150,11 @@ routeParser =
         ]
 
 
-setPage : Route -> PageModel
-setPage route =
+setPage : Session.Session -> Route ->PageModel
+setPage session route =
     case route of
         LoginRoute ->
-            LoginPage Login.init
+            LoginPage (Login.init session)
 
         OtherRoute ->
             OtherPage

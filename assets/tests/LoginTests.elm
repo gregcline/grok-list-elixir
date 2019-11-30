@@ -3,6 +3,7 @@ module LoginTests exposing (updateTests, viewTests)
 import Expect exposing (Expectation)
 import Html.Attributes exposing (placeholder, type_, value)
 import Login exposing (..)
+import Session exposing (Session, emptySession)
 import Test exposing (..)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -14,42 +15,46 @@ viewTests =
     describe "view"
         [ test "should have an email field" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ attribute (type_ "email") ]
                     |> Query.has [ attribute (placeholder "Email") ]
         , test "should have a password field" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ attribute (type_ "password") ]
                     |> Query.has [ attribute (placeholder "Password") ]
         , test "should have a submit button" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ tag "button" ]
                     |> Query.has [ text "Log in" ]
         , test "should have the email value from the model" <|
             \_ ->
-                { email = "foo@bar", password = "" }
+                { email = "foo@bar", password = "", session = emptySession }
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ attribute (type_ "email") ]
                     |> Query.has [ attribute (value "foo@bar") ]
         , test "should have the password value from the model" <|
             \_ ->
-                { email = "foo@bar", password = "my_pass" }
+                { email = "foo@bar", password = "my_pass", session = emptySession }
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ attribute (type_ "password") ]
                     |> Query.has [ attribute (value "my_pass") ]
         , test "should send the EmailUpdate message on input" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ attribute (type_ "email") ]
@@ -57,7 +62,8 @@ viewTests =
                     |> Event.expect (EmailUpdate "foo")
         , test "should send the PasswordUpdate message on input" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> view
                     |> Query.fromHtml
                     |> Query.find [ attribute (type_ "password") ]
@@ -71,17 +77,26 @@ updateTests =
     describe "update"
         [ test "should set the email when given the EmailUpdate message" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> update (EmailUpdate "foo@bar.com")
-                    |> Expect.equal { email = "foo@bar.com", password = "" }
+                    |> Expect.equal ({ email = "foo@bar.com", password = "" , session = emptySession}, Cmd.none)
         , test "should set the password when given the PasswordUpdate message" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> update (PasswordUpdate "my_pass")
-                    |> Expect.equal { email = "", password = "my_pass" }
+                    |> Expect.equal ({ email = "", password = "my_pass" , session = emptySession}, Cmd.none)
+        -- , test "should send a Login Cmd when Submit is sent" <|
+        --     \_ ->
+                -- emptySession
+                    -- |> init
+        --             |> update Submit
+        --             |> Expect.equal ({ email = "", password = "" }, makeLoginRequest "" "")
         , test "should make no changes when given the NoOp message" <|
             \_ ->
-                init
+                emptySession
+                    |> init
                     |> update NoOp
-                    |> Expect.equal init
+                    |> Expect.equal (init emptySession, Cmd.none)
         ]
