@@ -80,17 +80,18 @@ updateTests =
                 emptySession
                     |> init
                     |> update (EmailUpdate "foo@bar.com")
-                    |> Expect.equal ({ email = "foo@bar.com", password = "" , session = emptySession}, Cmd.none)
+                    |> Expect.equal ( { email = "foo@bar.com", password = "", session = emptySession }, Cmd.none )
         , test "should set the password when given the PasswordUpdate message" <|
             \_ ->
                 emptySession
                     |> init
                     |> update (PasswordUpdate "my_pass")
-                    |> Expect.equal ({ email = "", password = "my_pass" , session = emptySession}, Cmd.none)
+                    |> Expect.equal ( { email = "", password = "my_pass", session = emptySession }, Cmd.none )
+
         -- , test "should send a Login Cmd when Submit is sent" <|
         --     \_ ->
-                -- emptySession
-                    -- |> init
+        -- emptySession
+        -- |> init
         --             |> update Submit
         --             |> Expect.equal ({ email = "", password = "" }, makeLoginRequest "" "")
         , test "should make no changes when given the NoOp message" <|
@@ -98,5 +99,5 @@ updateTests =
                 emptySession
                     |> init
                     |> update NoOp
-                    |> Expect.equal (init emptySession, Cmd.none)
+                    |> Expect.equal ( init emptySession, Cmd.none )
         ]

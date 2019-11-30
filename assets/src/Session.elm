@@ -1,15 +1,15 @@
 module Session exposing (..)
 
 import Graphql.Http
-import Url
 import RemoteData exposing (RemoteData(..))
-
+import Url
 
 
 type alias Session =
     { api : Maybe Url.Url
     , token : Maybe String
     }
+
 
 type alias Token =
     { token : Maybe String }
@@ -25,6 +25,7 @@ apiUrl session =
     case session.api of
         Just url ->
             Url.toString url
+
         Nothing ->
             "http://localhost:4000/api"
 

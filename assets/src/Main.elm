@@ -6,9 +6,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as Decode
 import Login
+import Session
 import Url
 import Url.Parser exposing ((</>), Parser, map, oneOf, parse, s, string)
-import Session
 
 
 
@@ -59,6 +59,7 @@ init flags url key =
                             Debug.log <| Decode.errorToString error
                     in
                     Nothing
+
         session =
             { api = apiUrl
             , token = Nothing
@@ -112,16 +113,24 @@ update msg model =
             )
 
         ( LoginMsg (Login.CompletedLogin token), LoginPage loginModel ) ->
-            let sessionToken = Session.extractToken token
-                sessionModel = model.session
-                session = {sessionModel | token = sessionToken}
+            let
+                sessionToken =
+                    Session.extractToken token
+
+                sessionModel =
+                    model.session
+
+                session =
+                    { sessionModel | token = sessionToken }
             in
-                ( { model | session = session}, Cmd.none )
+            ( { model | session = session }, Cmd.none )
+
         ( LoginMsg loginMsg, LoginPage loginModel ) ->
-            let (newLoginModel, newLoginCmd) =
+            let
+                ( newLoginModel, newLoginCmd ) =
                     Login.update loginMsg loginModel
             in
-            ( { model | pageModel = LoginPage newLoginModel}, Cmd.map LoginMsg newLoginCmd )
+            ( { model | pageModel = LoginPage newLoginModel }, Cmd.map LoginMsg newLoginCmd )
 
         _ ->
             ( model, Cmd.none )
@@ -150,7 +159,7 @@ routeParser =
         ]
 
 
-setPage : Session.Session -> Route ->PageModel
+setPage : Session.Session -> Route -> PageModel
 setPage session route =
     case route of
         LoginRoute ->
