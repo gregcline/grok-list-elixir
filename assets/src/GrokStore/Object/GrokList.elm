@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.Object.List exposing (id, items, title, users)
+module GrokStore.Object.GrokList exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -19,21 +19,21 @@ import GrokStore.Union
 import Json.Decode as Decode
 
 
-id : SelectionSet (Maybe GrokStore.ScalarCodecs.Id) GrokStore.Object.List
+id : SelectionSet (Maybe GrokStore.ScalarCodecs.Id) GrokStore.Object.GrokList
 id =
     Object.selectionForField "(Maybe ScalarCodecs.Id)" "id" [] (GrokStore.ScalarCodecs.codecs |> GrokStore.Scalar.unwrapCodecs |> .codecId |> .decoder |> Decode.nullable)
 
 
-items : SelectionSet decodesTo GrokStore.Object.Item -> SelectionSet (Maybe (List (Maybe decodesTo))) GrokStore.Object.List
+items : SelectionSet decodesTo GrokStore.Object.Item -> SelectionSet (Maybe (List (Maybe decodesTo))) GrokStore.Object.GrokList
 items object_ =
     Object.selectionForCompositeField "items" [] object_ (identity >> Decode.nullable >> Decode.list >> Decode.nullable)
 
 
-title : SelectionSet (Maybe String) GrokStore.Object.List
+title : SelectionSet (Maybe String) GrokStore.Object.GrokList
 title =
     Object.selectionForField "(Maybe String)" "title" [] (Decode.string |> Decode.nullable)
 
 
-users : SelectionSet decodesTo GrokStore.Object.User -> SelectionSet (Maybe (List (Maybe decodesTo))) GrokStore.Object.List
+users : SelectionSet decodesTo GrokStore.Object.User -> SelectionSet (Maybe (List (Maybe decodesTo))) GrokStore.Object.GrokList
 users object_ =
     Object.selectionForCompositeField "users" [] object_ (identity >> Decode.nullable >> Decode.list >> Decode.nullable)

@@ -19,17 +19,17 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
   test "no lists", %{user: user} do
     query = """
     {
-      lists {
+      grokLists {
         id
         title
       }
     }
     """
 
-    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema)
+    {:ok, %{data: %{"grokLists" => lists}}} = Absinthe.run(query, Schema)
     assert lists == []
     context = %{user: user}
-    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema, context: context)
+    {:ok, %{data: %{"grokLists" => lists}}} = Absinthe.run(query, Schema, context: context)
     assert lists == []
   end
 
@@ -41,7 +41,7 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
 
     query = """
     {
-      lists {
+      grokLists {
         id
         title
       }
@@ -50,11 +50,11 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
 
     context = %{user: user}
 
-    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema, context: context)
+    {:ok, %{data: %{"grokLists" => lists}}} = Absinthe.run(query, Schema, context: context)
 
     assert lists == [%{"title" => list.title, "id" => "#{list.id}"}]
 
-    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema)
+    {:ok, %{data: %{"grokLists" => lists}}} = Absinthe.run(query, Schema)
 
     assert lists == [
              %{"title" => list.title, "id" => "#{list.id}"},
@@ -85,7 +85,7 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
 
     query = """
     {
-      lists {
+      grokLists {
         title
         items {
           text
@@ -98,7 +98,7 @@ defmodule GrokStoreWeb.Absinthe.Queries.ListTest do
 
     context = %{}
 
-    {:ok, %{data: %{"lists" => lists}}} = Absinthe.run(query, Schema, context: context)
+    {:ok, %{data: %{"grokLists" => lists}}} = Absinthe.run(query, Schema, context: context)
 
     list_1 = hd(lists)
     assert list_1["title"] == list.title

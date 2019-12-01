@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.Union exposing (placeholder)
+module GrokStore.Union exposing (..)
 
 
 placeholder : String

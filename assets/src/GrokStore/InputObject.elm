@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.InputObject exposing (placeholder)
+module GrokStore.InputObject exposing (..)
 
 
 placeholder : String

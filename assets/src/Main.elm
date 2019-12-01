@@ -41,7 +41,6 @@ type alias Model =
 
 type PageModel
     = LoginPage Login.Model
-    | UserLists UserLists.Model
     | OtherPage
 
 
