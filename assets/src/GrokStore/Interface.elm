@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.Interface exposing (placeholder)
+module GrokStore.Interface exposing (..)
 
 
 placeholder : String

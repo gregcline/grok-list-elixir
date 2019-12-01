@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.Mutation exposing (AddItemOptionalArguments, AddItemRequiredArguments, CheckItemRequiredArguments, CreateListRequiredArguments, CreateUserRequiredArguments, LoginRequiredArguments, addItem, checkItem, createList, createUser, login)
+module GrokStore.Mutation exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -62,7 +62,7 @@ type alias CreateListRequiredArguments =
 
 {-| Create a list for the signed in user. Will error if there is not user signed in
 -}
-createList : CreateListRequiredArguments -> SelectionSet decodesTo GrokStore.Object.List -> SelectionSet (Maybe decodesTo) RootMutation
+createList : CreateListRequiredArguments -> SelectionSet decodesTo GrokStore.Object.GrokList -> SelectionSet (Maybe decodesTo) RootMutation
 createList requiredArgs object_ =
     Object.selectionForCompositeField "createList" [ Argument.required "title" requiredArgs.title Encode.string ] object_ (identity >> Decode.nullable)
 

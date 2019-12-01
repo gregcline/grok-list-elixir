@@ -8,7 +8,7 @@ defmodule GrokStoreWeb.Schema do
 
   query do
     @desc "Get all lists"
-    field :lists, list_of(:list) do
+    field :grok_lists, list_of(:grok_list) do
       resolve(&Resolvers.Groceries.list_lists/3)
     end
 
@@ -36,7 +36,7 @@ defmodule GrokStoreWeb.Schema do
     end
 
     @desc "Create a list for the signed in user. Will error if there is not user signed in"
-    field :create_list, type: :list do
+    field :create_list, type: :grok_list do
       arg(:title, non_null(:string))
       resolve(&Resolvers.Groceries.create_list/3)
     end

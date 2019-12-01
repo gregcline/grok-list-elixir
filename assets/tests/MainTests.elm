@@ -7,6 +7,7 @@ import Html.Attributes exposing (placeholder, type_, value)
 import Json.Decode as Decode
 import Login
 import Main exposing (..)
+import Session exposing (emptySession)
 import Test exposing (..)
 import Test.Html.Query as Query
 import Test.Html.Selector exposing (attribute, tag, text)
@@ -38,12 +39,12 @@ setPageTests =
         [ test "sets the page model to LoginPage" <|
             \_ ->
                 LoginRoute
-                    |> setPage
-                    |> Expect.equal (LoginPage Login.init)
+                    |> setPage emptySession
+                    |> Expect.equal (LoginPage (Login.init emptySession))
         , test "sets the page model to OtherPage" <|
             \_ ->
                 OtherRoute
-                    |> setPage
+                    |> setPage emptySession
                     |> Expect.equal OtherPage
         ]
 
@@ -53,7 +54,7 @@ pageTitleTests =
     describe "pageTitle"
         [ test "returns the login title" <|
             \_ ->
-                LoginPage Login.init
+                LoginPage (Login.init emptySession)
                     |> pageTitle
                     |> Expect.equal "Grok Store - Login"
         , test "returns the 404 title" <|

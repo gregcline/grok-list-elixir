@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.Query exposing (UserRequiredArguments, lists, user)
+module GrokStore.Query exposing (..)
 
 import Graphql.Internal.Builder.Argument as Argument exposing (Argument)
 import Graphql.Internal.Builder.Object as Object
@@ -21,9 +21,9 @@ import Json.Decode as Decode exposing (Decoder)
 
 {-| Get all lists
 -}
-lists : SelectionSet decodesTo GrokStore.Object.List -> SelectionSet (Maybe (List (Maybe decodesTo))) RootQuery
-lists object_ =
-    Object.selectionForCompositeField "lists" [] object_ (identity >> Decode.nullable >> Decode.list >> Decode.nullable)
+grokLists : SelectionSet decodesTo GrokStore.Object.GrokList -> SelectionSet (Maybe (List (Maybe decodesTo))) RootQuery
+grokLists object_ =
+    Object.selectionForCompositeField "grokLists" [] object_ (identity >> Decode.nullable >> Decode.list >> Decode.nullable)
 
 
 type alias UserRequiredArguments =

@@ -2,15 +2,15 @@
 -- https://github.com/dillonkearns/elm-graphql
 
 
-module GrokStore.Object exposing (Item(..), List(..), Session(..), User(..))
+module GrokStore.Object exposing (..)
+
+
+type GrokList
+    = GrokList
 
 
 type Item
     = Item
-
-
-type List
-    = List
 
 
 type Session

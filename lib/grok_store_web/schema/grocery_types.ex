@@ -4,7 +4,7 @@ defmodule GrokStoreWeb.Schema.GroceryTypes do
   alias GrokStoreWeb.Resolvers
 
   @desc "A grocery list"
-  object :list do
+  object :grok_list do
     field :id, :id
     field :title, :string
 
