@@ -11,7 +11,14 @@ defmodule GrokStore.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      dialyzer: [plt_add_deps: :transitive]
+      dialyzer: [plt_add_deps: :transitive],
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -53,6 +60,7 @@ defmodule GrokStore.MixProject do
       {:ueberauth, "~> 0.6.1"},
       {:ueberauth_identity, "~> 0.2.3"},
       {:phoenix_live_view, "~> 0.6.0"},
+      {:excoveralls, "~> 0.12.2", only: :test},
       {:floki, ">= 0.0.0", only: :test}
     ]
   end
