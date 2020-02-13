@@ -5,6 +5,7 @@ defmodule GrokStoreWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
+    plug Phoenix.LiveView.Flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -29,6 +30,14 @@ defmodule GrokStoreWeb.Router do
   scope "/", GrokStoreWeb do
     pipe_through :browser
 
-    get "/*path", PageController, :index
+    get "/", PageController, :index
+    get "/404", PageController, :missing
+
+    live "/users/new", UserLive.New
+    get "/users/:id", UserController, :show
+
+    get "/login", LoginController, :index
+    post "/login", LoginController, :new
+    delete "/login", LoginController, :delete
   end
 end

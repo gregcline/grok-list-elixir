@@ -51,7 +51,9 @@ defmodule GrokStore.MixProject do
       {:guardian, "~> 1.2"},
       {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
       {:ueberauth, "~> 0.6.1"},
-      {:ueberauth_identity, "~> 0.2.3"}
+      {:ueberauth_identity, "~> 0.2.3"},
+      {:phoenix_live_view, "~> 0.6.0"},
+      {:floki, ">= 0.0.0", only: :test}
     ]
   end
 
