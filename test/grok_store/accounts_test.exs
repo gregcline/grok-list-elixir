@@ -8,13 +8,13 @@ defmodule GrokStore.AccountsTest do
     alias GrokStore.Accounts.User
 
     @valid_attrs %{
-      email: "some email",
+      email: "some@email.com",
       name: "some name",
       passhash: "some passhash",
       password: "some password"
     }
     @update_attrs %{
-      email: "some updated email",
+      email: "some_updated@email.com",
       name: "some updated name",
       passhash: "some updated passhash",
       password: "some updated password"
@@ -48,7 +48,7 @@ defmodule GrokStore.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.email == "some email"
+      assert user.email == "some@email.com"
       assert user.name == "some name"
     end
 
@@ -59,7 +59,7 @@ defmodule GrokStore.AccountsTest do
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
-      assert user.email == "some updated email"
+      assert user.email == "some_updated@email.com"
       assert user.name == "some updated name"
     end
 
@@ -78,7 +78,7 @@ defmodule GrokStore.AccountsTest do
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_user!(user.id) end
     end
 
-    test "change_user/1 returns a user changeset" do
+    test "change_user/2 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Accounts.change_user(user)
     end

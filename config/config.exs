@@ -15,7 +15,8 @@ config :grok_store, GrokStoreWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "JHg6vbSO8OM12EHL5WEDd+gpjL5LkWeGi8NfhvuHas9/a6ljkkxDar+JTrBk2NOx",
   render_errors: [view: GrokStoreWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: GrokStore.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: GrokStore.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "jEltpqla61RR0U0QqijS+pFBjlp9nMCW"]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -28,7 +29,7 @@ config :phoenix, :json_library, Jason
 # Use Ueberauth
 config :ueberauth, Ueberauth,
   providers: [
-    identity: {Ueberauth.Strategy.Identity, []}
+    identity: {Ueberauth.Strategy.Identity, [callback_methods: ["POST"]]}
   ]
 
 # Import environment specific config. This must remain at the bottom

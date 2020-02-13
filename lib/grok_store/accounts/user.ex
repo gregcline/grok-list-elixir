@@ -18,15 +18,17 @@ defmodule GrokStore.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :passhash, :password])
-    |> validate_required([:name, :email, :passhash, :password])
+    |> cast(attrs, [:name, :email, :password])
+    |> validate_required([:name, :email, :password])
+    |> validate_confirmation(:password)
+    |> validate_format(:email, ~r/.+@.+/, message: "must be a valid email address")
+    |> unique_constraint(:email)
   end
 
   @doc false
   def create_user_changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :password])
-    |> validate_required([:name, :email, :password])
+    |> changeset(attrs)
     |> put_pass_hash()
   end
 
