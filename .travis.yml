@@ -3,5 +3,7 @@ elixir:
   - 1.9
 services:
   - postgresql
+env:
+  - MIX_ENV=test
 script:
-  - "MIX_ENV=test mix do deps.get, test && mix compile && mix coveralls.travis"
+  - "mix coveralls.travis"
