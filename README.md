@@ -1,4 +1,5 @@
 # GrokStore
+[![Coverage Status](https://coveralls.io/repos/github/gregcline/grok-list-elixir/badge.svg?branch=master)](https://coveralls.io/github/gregcline/grok-list-elixir?branch=master)
 
 To start your Phoenix server:
 
