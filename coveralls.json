@@ -1,0 +1,9 @@
+{
+    "skip_files": [
+        "test",
+        "grok_store_web.ex"
+    ],
+    "coverage_options": {
+        "treat_no_relevant_lines_as_covered": true
+    }
+}
