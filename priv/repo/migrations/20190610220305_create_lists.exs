@@ -7,6 +7,5 @@ defmodule GrokStore.Repo.Migrations.CreateLists do
 
       timestamps()
     end
-
   end
 end
